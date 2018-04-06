@@ -194,7 +194,8 @@
 		
 	function submit(){
 		var msg = document.getElementById('msg').value;
-		if( msg != '' || $("#apnd").text!=''){
+		console.log(msg);
+		if( (msg != undefined && msg != '') || (me != '' && me != undefined)){
 			var m = document.createElement('li');
 			var a = document.createElement('a');
 
@@ -202,7 +203,7 @@
 
 			a.setAttribute('href','#');
 			m.appendChild(a);
-			console.log(me);
+			
 
 			var p = document.createElement('p');
 			p.setAttribute('id','diff');
