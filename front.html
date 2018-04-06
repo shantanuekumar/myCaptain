@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>messaging app</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<style type="text/css">
+		body{
+			margin:0;
+			font-family: arial;
+			background-color: #eae3e3;
+			
+		}
+		div{
+			
+			height: 100%;
+		}
+		header{
+			width: 100%;
+			height: 90px;
+			background: #26682d;
+			color: #c9a9a9;
+		}
+		#img{
+			padding: 15px 0 0 20px;
+		}
+		ul{
+			float: right;
+			
+		}
+
+		#right{
+			margin-right: 40px;
+			visibility: hidden;
+		}
+
+		#right li{
+			margin: 10px;
+		}
+		#right li a{
+			margin-right: 20px;
+		}
+
+		ul>li{
+			margin: 20px 20px 0 0;
+			display: inline-block;
+		}
+		textarea{
+			position: fixed;
+			bottom: 0;
+			margin: 0 0 10px 20px;
+			border-radius: 20px;
+			outline: none;
+			padding: 0px 20px 0 20px;
+			resize: none;
+			border:none;
+			caret-color:#2e8962;
+			overflow: hidden;
+
+		}
+
+		footer{
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			
+		}
+		#res{
+			float: right;
+			margin: 15px 200px 12px 0;
+		}
+		
+		textarea::placeholder{
+			line-height: 45px;
+			color: #bab2b2;
+		}
+		#cont>li{
+			position: absolute;
+			padding:10px;
+			background-color: #64af9e;
+			border-radius: 20px;
+			margin:20px;
+			max-width: 100px;
+			list-style: none;
+		}
+
+		content ul{
+			clear: both;
+			float: right;
+			list-style: none;
+			margin-top: 40px;
+			
+		}
+
+		a{
+			text-decoration: none;
+			color: black;
+		}
+
+		content ul li{
+			
+			display: block;
+			max-width: 100px;
+			margin:20px;
+			border-radius: 20px;
+			padding: 10px;
+			background-color: #64af9e;
+			width: max-content;
+
+		}
+
+		#apnd{
+			padding:10px;
+			background:#bfafaf;
+			border-radius: 20px;
+			max-width: 80px;
+			position: relative;
+			display:block;
+			margin-left: 20px;
+		}
+		#diff{
+			padding: 10px;
+			background-color: red;
+			max-width: 80px;
+		}
+
+
+	</style>
+</head>
+<body>
+<div>
+<header>
+	<img id="img" src="happy.png">
+	
+	<ul id="right">
+		
+		<li id="reply"><a href="#"><img src="reply.png"></a></li>
+		<li id="bmark"><a href="#"><img src="star.png"></a></li>
+		
+	</ul>
+</header>
+<content id="cont">
+	<li class="click"><a href="#">hey ! enjoy messaging with this app.</a></li>
+	<ul id="ins"></ul>
+</content>
+<footer>
+	<textarea id="msg" name="input" rows="3" cols="120" placeholder="Type a message"></textarea>
+	<a id="res" href="#" onclick=submit() ><img id="send" src="send.png"></a>
+</footer>
+</div>
+</body>
+
+<script >
+	var me;
+	var selected = "false";
+
+	 if(selected == "false"){
+	$("#cont").on("click","li.click",function(){
+		if($('#right').css("visibility") == 'hidden'){
+			me = $(this).text();
+			$('#right').css("visibility",'visible');
+			$(this).css("background",'#a01451');
+			selected = "true";
+
+			$('footer').css("visibility",'hidden');
+
+			$('#reply').click(function(){
+										
+				$("<p id='apnd'></p>").insertBefore("textarea");
+				$("#apnd").html(me);
+				$('#right').css("visibility",'hidden');
+				$(".click").css("background",'#64af9e');
+				$('footer').css("visibility",'visible');
+
+			})
+		}
+		
+		else{
+		$('footer').css("visibility",'hidden');
+		$('#right').css("visibility",'hidden');	
+		$(this).css("background",'#64af9e');
+		selected = "false";
+		}
+		 
+
+
+	});
+
+
+ }
+	
+</script>
+
+<script type="text/javascript">
+		
+	function submit(){
+		var msg = document.getElementById('msg').value;
+		if( msg != '' || $("#apnd").text!=''){
+			var m = document.createElement('li');
+			var a = document.createElement('a');
+
+			m.setAttribute('class','click');
+
+			a.setAttribute('href','#');
+			m.appendChild(a);
+			console.log(me);
+
+			var p = document.createElement('p');
+			p.setAttribute('id','diff');
+
+
+			a.innerHTML = ' '+msg;
+			if(me != undefined && me != ''){
+				p.innerHTML = me;
+				a.prepend(p);
+				
+			}
+			
+			
+			document.getElementById('ins').appendChild(m);
+			document.getElementById('msg').value = '';
+
+
+
+			 
+
+    jQuery(document).ready(function($) {
+        $(function(){
+            $('#apnd').remove();
+            me = '';
+            
+        });
+    });
+
+		$('#apnd').remove();	
+		}
+	}
+	
+	
+
+	
+
+
+	
+	
+
+</script>
+
+</html>
