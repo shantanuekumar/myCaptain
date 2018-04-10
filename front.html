@@ -3,128 +3,7 @@
 <head>
 	<title>messaging app</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<style type="text/css">
-		body{
-			margin:0;
-			font-family: arial;
-			background-color: #eae3e3;
-			
-		}
-		div{
-			
-			height: 100%;
-		}
-		header{
-			width: 100%;
-			height: 90px;
-			background: #26682d;
-			color: #c9a9a9;
-		}
-		#img{
-			padding: 15px 0 0 20px;
-		}
-		ul{
-			float: right;
-			
-		}
-
-		#right{
-			margin-right: 40px;
-			visibility: hidden;
-		}
-
-		#right li{
-			margin: 10px;
-		}
-		#right li a{
-			margin-right: 20px;
-		}
-
-		ul>li{
-			margin: 20px 20px 0 0;
-			display: inline-block;
-		}
-		textarea{
-			position: fixed;
-			bottom: 0;
-			margin: 0 0 10px 20px;
-			border-radius: 20px;
-			outline: none;
-			padding: 0px 20px 0 20px;
-			resize: none;
-			border:none;
-			caret-color:#2e8962;
-			overflow: hidden;
-
-		}
-
-		footer{
-			position: fixed;
-			bottom: 0;
-			width: 100%;
-			
-		}
-		#res{
-			float: right;
-			margin: 15px 200px 12px 0;
-		}
-		
-		textarea::placeholder{
-			line-height: 45px;
-			color: #bab2b2;
-		}
-		#cont>li{
-			position: absolute;
-			padding:10px;
-			background-color: #64af9e;
-			border-radius: 20px;
-			margin:20px;
-			max-width: 100px;
-			list-style: none;
-		}
-
-		content ul{
-			clear: both;
-			float: right;
-			list-style: none;
-			margin-top: 40px;
-			
-		}
-
-		a{
-			text-decoration: none;
-			color: black;
-		}
-
-		content ul li{
-			
-			display: block;
-			max-width: 100px;
-			margin:20px;
-			border-radius: 20px;
-			padding: 10px;
-			background-color: #64af9e;
-			width: max-content;
-
-		}
-
-		#apnd{
-			padding:10px;
-			background:#bfafaf;
-			border-radius: 20px;
-			max-width: 80px;
-			position: relative;
-			display:block;
-			margin-left: 20px;
-		}
-		#diff{
-			padding: 10px;
-			background-color: red;
-			max-width: 80px;
-		}
-
-
-	</style>
+	<link rel="stylesheet" type="text/css" href="front.css">
 </head>
 <body>
 <div>
@@ -139,7 +18,7 @@
 	</ul>
 </header>
 <content id="cont">
-	<li class="click"><a href="#">hey ! enjoy messaging with this app.</a></li>
+	<li class="click" id="m1"><a href="#">hey ! enjoy messaging with this app.</a></li>
 	<ul id="ins"></ul>
 </content>
 <footer>
@@ -149,21 +28,42 @@
 </div>
 </body>
 
-<script >
+<script type="text/javascript">
 	var me;
-	var selected = "false";
+	var click;
+	var ref;
+	
+	$("#cont").on("click","li.click",function(){		
 
-	 if(selected == "false"){
-	$("#cont").on("click","li.click",function(){
+// makes reply icon visible and hides the footer on selecting any message 
+
 		if($('#right').css("visibility") == 'hidden'){
+
+// gets the text inside the selected message
+			
 			me = $(this).text();
+
+//sets selected message content to message text if reselected
+
+								
 			$('#right').css("visibility",'visible');
 			$(this).css("background",'#a01451');
-			selected = "true";
-
 			$('footer').css("visibility",'hidden');
 
+
+			click = this.id;
+			
+// on clicking the reply button copies the message selected before textarea in the footer to demarcate the selected message, hides the reply button itself and makes footer again visible. 
+			
 			$('#reply').click(function(){
+
+				
+// removes all appended p tags above textarea from previous replies 
+
+				
+				$('#apnd').remove();
+
+				ref = click;
 										
 				$("<p id='apnd'></p>").insertBefore("textarea");
 				$("#apnd").html(me);
@@ -171,79 +71,135 @@
 				$(".click").css("background",'#64af9e');
 				$('footer').css("visibility",'visible');
 
+// makes all messages unclickable upon clicking the reply icon				
+
+				$('li').removeClass('click');
 			})
+			
+// removes click class from all li's except the selected one
+			$('li').not($(this)).removeClass('click');
+			
+			
+			
 		}
 		
+
+
+// keeps the footer visible and reply button invisible if its visible
 		else{
-		$('footer').css("visibility",'hidden');
+
+		$('footer').css("visibility",'visible');
 		$('#right').css("visibility",'hidden');	
 		$(this).css("background",'#64af9e');
-		selected = "false";
+
+//sets selected message text to empty if reselected
+		
+		me = '';
+				
+// adds click class to all li's again
+		$('li').addClass('click');
+			
 		}
-		 
 
-
+		
+		 			
 	});
 
+// on clicking the up arrow icon in replied messages scrolls to the original message
 
- }
-	
+	$('#ins').on('click','#jmp',function(){
+
+		var referred = $(this).parent().attr('id');
+
+		var some = message.data.find(item => item.id === referred);
+
+		$(document).ready(function() {
+			    
+		$("html, body").animate({scrollTop: $('#'+some.ref_id).offset().top - $('#'+some.ref_id).height() -100 }, 500); 
+
+		});
+})
+
 </script>
-
 <script type="text/javascript">
-		
+	var i=2;
+
+// json array object to insert id and reference id of each replied message 
+
+		var message = {
+			data: []
+		};
+
+// submits the message inside textarea 
+
 	function submit(){
+
+// gets the message submitted in textarea
 		var msg = document.getElementById('msg').value;
-		console.log(msg);
+
+// checks whether some text was submitted or some message was selected
 		if( (msg != undefined && msg != '') || (me != '' && me != undefined)){
+			
+
+// creates dynamic elements where text will be inserted 
 			var m = document.createElement('li');
 			var a = document.createElement('a');
 
 			m.setAttribute('class','click');
+			m.setAttribute('id','m'+(i++));
 
 			a.setAttribute('href','#');
 			m.appendChild(a);
 			
 
+// creates a p tag to insert the selected message along with replied message(if any) as a single message. 
 			var p = document.createElement('p');
 			p.setAttribute('id','diff');
 
+			var im = document.createElement('img');
+			im.setAttribute('id','jmp');
+			im.setAttribute('src','up.png');
+
+			
+// inserts the message inside anchor tag inside li in DOM 
 
 			a.innerHTML = ' '+msg;
+
+// any message if selected its content is inserted inside p tag created above and prepended before the reply in the message. 
 			if(me != undefined && me != ''){
 				p.innerHTML = me;
 				a.prepend(p);
-				
+				m.prepend(im);
+
+// id and reference id is being pushed
+
+				message.data.push({
+					'id': m.id,
+					'ref_id': ref
+				});
 			}
 			
 			
+// above created elements are appended to ul in the HTML DOM and message is set to empty.
+
 			document.getElementById('ins').appendChild(m);
 			document.getElementById('msg').value = '';
 
 
-
-			 
-
-    jQuery(document).ready(function($) {
-        $(function(){
+// removes the appended p tag before textarea after message is submitted  
             $('#apnd').remove();
             me = '';
-            
-        });
-    });
 
-		$('#apnd').remove();	
+   
+// scrolls to the last message
+    	$("html, body").animate({ scrollTop: $(document).height() }, 1000);
+
+// adds class click to all messages after submitting the reply message
+    	$('#cont li').addClass('click');
+          		
 		}
+
 	}
 	
-	
-
-	
-
-
-	
-	
-
 </script>
-
 </html>
